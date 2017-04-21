@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/AlexandruHarastasan/angularJstutorial/issues"
   },
-  "homepage": "https://github.com/AlexandruHarastasan/angularJstutorial#readme"
+  "homepage": "https://github.com/AlexandruHarastasan/angularJstutorial#readme",
+  "dependencies": {
+    "angular-animate": "^1.6.4",
+    "angular-aria": "^1.6.4"
+  }
 }
