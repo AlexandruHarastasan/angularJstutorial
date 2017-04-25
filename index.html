@@ -13,6 +13,7 @@
         <link rel="stylesheet" href="node_modules/angular-material/angular-material.css">
         <link href="node_modules/mdi/css/materialdesignicons.min.css" media="all" rel="stylesheet" type="text/css">
         <link rel="stylesheet" type="text/css" href="css/style.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
     </head>
     <body ng-app="ngClassifieds" ng-controller="classifiedsCtrl">        
         
@@ -23,9 +24,32 @@
                 <md-icon class="mdi mdi-plus-circle"></md-icon>
                 New Classified
                </md-button>
+               <md-button ng-click="showFilters = true">
+                <md-icon class="mdi mdi-magnify"></md-icon>
+                Filters
+               </md-button>
            </div>
         </md-toolbar>
-        
+        <div class="filters" layout="row" layout-align="center top" ng-show="showFilters">
+            <md-input-container layout-align="center center">
+                <label>Enter Searsch Term</label>
+                <input type="text" ng-model="classifiedsFilter">
+            </md-input-container>
+            
+            <md-input-container>
+                <label>Category</label>
+                <md-select ng-model="category">
+                    <md-option ng-repeat="category in categories" value="{{ category }}">
+                        {{ category }}
+                    </md-option>
+                </md-select>
+            </md-input-container>
+            
+            <div class="clearButton">
+                <md-button class="md-warn" ng-click="classifiedsFilter = ''; category = ''">Clear</md-button>
+            </div>
+            
+        </div>
         <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left">
             <md-toolbar>
                 <h1 class="md-toolbar-tools">Add a Classified</h1>
@@ -48,10 +72,10 @@
                         <label for="image">Image Link</label>
                         <input type="text" id="image" ng-model="classified.image">
                     </md-input-container>
-                    <md-button class="md-primary" ng-click="saveClassified(classified)">
+                    <md-button ng-if="!editing" class="md-primary" ng-click="saveClassified(classified)">
                         Save
                     </md-button>
-                    <md-button class="md-primary">
+                    <md-button ng-if="editing" class="md-primary" ng-click="saveEdit()">
                         Save Edit
                     </md-button>
                     <md-button class="md-warn" ng-click="closeSidebar()">
@@ -62,7 +86,7 @@
         </md-sidenav>
         
         <md-content class="md-padding" layout="row" layout-wrap>
-            <md-card ng-repeat="classified in classifieds" flex="30">
+            <md-card ng-repeat="classified in classifieds | filter: classifiedsFilter | filter: category " flex="30" class="classified">
                 <img ng-src="{{ classified.image }}" alt="">
                 <md-card-content>
                     <div class="classified-info" ng-show="!showContact">
@@ -85,8 +109,8 @@
                     <div class="classified-admin" ng-if="showAdmin">
                         <h3>Admin</h3>
                         <div layout="row">
-                            <md-button class="md-primary">Edit</md-button>
-                            <md-button class="md-warning">Delete</md-button>
+                            <md-button class="md-primary" ng-click="editClassified(classified)">Edit</md-button>
+                            <md-button class="md-warn" ng-click="deleteClassified($event, classified)">Delete</md-button>
                         </div>
                     </div>
                 </md-card-content>
